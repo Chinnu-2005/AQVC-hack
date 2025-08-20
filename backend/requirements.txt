@@ -1,0 +1,11 @@
+pandas
+numpy
+qiskit
+yfinance
+fastapi[standard]
+uvicorn[standard]
+scikit-learn
+qiskit_machine_learning
+qiskit_algorithms
+pydantic
+pydantic-settings
