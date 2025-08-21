@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     MODEL_FILE: str = "quantum_vqc.joblib"
     MODEL_METADATA_FILE: str = "model_metadata.json"
     
+    # Cache Configuration
+    CACHE_DIR: str = "cache"
+    CACHE_FILE: str = "predictions_cache.csv"
+    
     # Data Configuration
     DEFAULT_START_DATE: str = "2020-01-01"
     DEFAULT_END_DATE: str = "2023-12-31"

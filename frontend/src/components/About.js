@@ -3,45 +3,45 @@ import './About.css';
 
 const About = () => {
   return (
-    <section className="section">
+    <section className="section about-section">
       <div className="container">
-        <h2 className="section-title">About Our Quantum Approach</h2>
+        <h2 className="section-title">Built for signal. Designed for speed.</h2>
         <div className="about-content">
           <div className="about-text">
-            <h3>Revolutionary Technology</h3>
+            <h3>Production‑grade Quantum ML</h3>
             <p>
-              Our system combines the power of quantum computing with machine learning to analyze 
-              FTSE 100 market patterns. Using Variational Quantum Classifiers (VQC), we process 
-              complex market data through quantum circuits to generate accurate intraday predictions.
+              We combine classical feature engineering with a Variational Quantum Classifier to
+              capture non‑linear structure in FTSE 100 dynamics. The system trains on a sliding
+              3‑year window ending yesterday and makes intraday calls at five time points.
             </p>
-            
-            <h3>Technical Indicators</h3>
+
+            <h3>Transparent, reproducible signals</h3>
             <p>
-              We analyze 8 key technical indicators including RSI, MACD, moving averages, 
-              volatility, and volume patterns to create comprehensive market insights.
+              Signals are derived from 8 interpretable inputs like RSI, MACD, moving averages,
+              volatility and volume regimes. All steps are logged and cached for fast reloads.
             </p>
-            
-            <h3>Real-Time Predictions</h3>
+
+            <h3>Fast path to insights</h3>
             <p>
-              Get predictions for 2-hour intervals throughout the trading day (8:00 AM to 4:00 PM), 
-              helping you make informed trading decisions with quantum-powered accuracy.
+              The app caches trained results per date and reuses the latest model to deliver
+              answers instantly, even after restarts.
             </p>
           </div>
           <div className="about-features">
             <div className="feature-card">
               <div className="feature-icon">⚛</div>
-              <h4>Quantum Processing</h4>
-              <p>Advanced quantum algorithms for pattern recognition</p>
+              <h4>Quantum VQC core</h4>
+              <p>Parameterized circuits optimized on stratified splits</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">📊</div>
-              <h4>Technical Analysis</h4>
-              <p>Comprehensive market indicators and metrics</p>
+              <div className="feature-icon">📈</div>
+              <h4>8 engineered features</h4>
+              <p>Signals distilled from momentum, trend and risk</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">⏰</div>
-              <h4>Intraday Focus</h4>
-              <p>2-hour interval predictions for precise timing</p>
+              <div className="feature-icon">⚡</div>
+              <h4>Instant reloads</h4>
+              <p>CSV cache for historical dates; daily auto‑train for today</p>
             </div>
           </div>
         </div>

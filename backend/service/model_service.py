@@ -9,6 +9,7 @@ from service.data_service import DataService
 from util.config import settings
 from util.logger import setup_logger
 from util.exceptions import ModelNotTrainedException, TrainingException
+import csv
 
 logger = setup_logger(__name__)
 
@@ -20,6 +21,9 @@ class ModelService:
         self.model_dir: Path = Path(settings.MODEL_DIR)
         self.model_path: Path = self.model_dir / settings.MODEL_FILE
         self.metadata_path: Path = self.model_dir / settings.MODEL_METADATA_FILE
+        # Cache paths
+        self.cache_dir: Path = Path(settings.CACHE_DIR)
+        self.cache_file: Path = self.cache_dir / settings.CACHE_FILE
         self.model_metadata = {
             "is_trained": False,
             "accuracy": None,
@@ -29,6 +33,74 @@ class ModelService:
         }
         # Try to load a persisted model at startup of the service
         self._try_load_model()
+        # Ensure cache directory exists
+        try:
+            self.cache_dir.mkdir(exist_ok=True, parents=True)
+        except Exception:
+            pass
+
+    # ----------------------
+    # Simple CSV cache helpers
+    # ----------------------
+    def _read_cache(self, target_date: str) -> Optional[Dict[str, Any]]:
+        try:
+            if not self.cache_file.exists():
+                return None
+            with self.cache_file.open("r", encoding="utf-8", newline="") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if row.get("target_date") == target_date:
+                        # Convert nested JSON fields back to dicts where relevant
+                        predictions = json.loads(row.get("predictions", "{}"))
+                        actual_data = json.loads(row.get("actual_data", "null"))
+                        return {
+                            "target_date": row.get("target_date"),
+                            "is_historical_date": row.get("is_historical_date") == "true",
+                            "training_period": row.get("training_period"),
+                            "training_accuracy": float(row["training_accuracy"]) if row.get("training_accuracy") else None,
+                            "training_samples": int(row["training_samples"]) if row.get("training_samples") else None,
+                            "predictions": predictions,
+                            "base_feature_vector": json.loads(row.get("base_feature_vector", "[]")),
+                            "actual_data": actual_data,
+                            "timestamp": row.get("timestamp"),
+                        }
+        except Exception as e:
+            logger.error(f"Failed reading cache: {e}")
+        return None
+
+    def _write_cache(self, payload: Dict[str, Any]) -> None:
+        try:
+            fieldnames = [
+                "target_date",
+                "is_historical_date",
+                "training_period",
+                "training_accuracy",
+                "training_samples",
+                "predictions",
+                "base_feature_vector",
+                "actual_data",
+                "timestamp",
+            ]
+
+            is_new = not self.cache_file.exists()
+            with self.cache_file.open("a", encoding="utf-8", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                if is_new:
+                    writer.writeheader()
+                row = {
+                    "target_date": payload.get("target_date"),
+                    "is_historical_date": "true" if payload.get("is_historical_date") else "false",
+                    "training_period": payload.get("training_period"),
+                    "training_accuracy": payload.get("training_accuracy"),
+                    "training_samples": payload.get("training_samples"),
+                    "predictions": json.dumps(payload.get("predictions", {})),
+                    "base_feature_vector": json.dumps(payload.get("base_feature_vector", [])),
+                    "actual_data": json.dumps(payload.get("actual_data")),
+                    "timestamp": payload.get("timestamp"),
+                }
+                writer.writerow(row)
+        except Exception as e:
+            logger.error(f"Failed writing cache: {e}")
 
     def _try_load_model(self) -> None:
         """Attempt to load a saved model and metadata from disk."""
@@ -265,7 +337,14 @@ class ModelService:
             
             # Make intraday predictions using historical data only
             result = self.predictor.predict_intraday(historical_data)
-            
+
+            # Enrich response with training metadata so frontend can display accuracy
+            result.update({
+                "training_accuracy": self.model_metadata.get("accuracy"),
+                "training_samples": self.model_metadata.get("training_samples"),
+                "training_period": f"{start_date} to {end_date}",
+            })
+
             return result
             
         except Exception as e:
@@ -288,6 +367,12 @@ class ModelService:
             # Validate date format
             if not DataService.validate_date_format(target_date):
                 raise ValueError(f"Invalid date format: {target_date}. Use YYYY-MM-DD format")
+
+            # 1) Try cache first
+            cached = self._read_cache(target_date)
+            if cached is not None:
+                logger.info("Serving prediction from cache")
+                return cached
             
             # Get training date range for the target date
             start_date, end_date = DataService.get_training_date_range_for_date(target_date)
@@ -337,6 +422,9 @@ class ModelService:
                 "timestamp": datetime.now().isoformat()
             }
             
+            # 2) Write to cache (only for this exact date)
+            self._write_cache(result)
+
             return result
             
         except Exception as e:

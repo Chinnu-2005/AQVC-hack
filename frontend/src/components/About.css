@@ -1,57 +1,59 @@
 /* About Section */
+.about-section { position: relative; }
+
 .about-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 3rem;
     align-items: start;
 }
 
 .about-text h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
     color: #00d4ff;
 }
 
 .about-text p {
-    color: #b0b0b0;
-    margin-bottom: 2rem;
-    line-height: 1.6;
+    color: #b8c4d2;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
 }
 
 .about-features {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.25rem;
 }
 
 .feature-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 2rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 1.5rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.18);
 }
 
 .feature-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.75rem;
 }
 
 .feature-card h4 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
     color: #ffffff;
 }
 
 .feature-card p {
-    color: #b0b0b0;
+    color: #9fb1bf;
     line-height: 1.5;
 }
 
@@ -60,13 +62,5 @@
     .about-content {
         grid-template-columns: 1fr;
         gap: 2rem;
-    }
-    
-    .about-text h3 {
-        font-size: 1.3rem;
-    }
-    
-    .feature-card {
-        padding: 1.5rem;
     }
 }

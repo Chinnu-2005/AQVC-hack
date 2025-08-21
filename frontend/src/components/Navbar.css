@@ -3,9 +3,9 @@
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent; /* transparent navbar */
+    backdrop-filter: none; /* no blur line */
+    border-bottom: 1px solid transparent; /* invisible border */
     z-index: 1000;
     padding: 1rem 0;
 }
@@ -55,10 +55,11 @@
     border: none;
     color: #ffffff;
     text-decoration: none;
-    font-weight: 500;
-    font-size: 1rem;
+    font-weight: 700; /* enhanced text weight */
+    font-size: 1.1rem; /* enhanced size */
+    letter-spacing: 0.03em; /* subtle tracking */
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
     position: relative;
     padding: 0.5rem 0;
 }
@@ -66,6 +67,7 @@
 .nav-link:hover,
 .nav-link.active {
     color: #00d4ff;
+    text-shadow: 0 0 18px rgba(0, 212, 255, 0.35);
 }
 
 .nav-link::after {
