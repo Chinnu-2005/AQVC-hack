@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum ML FTSE 100 Predictor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="quantum-icon">⚛</span>
+                <span class="logo-text">Quantum ML</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link">Dashboard</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="section active">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Quantum Machine Learning
+                    <span class="highlight">FTSE 100 Predictor</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Leveraging quantum computing to predict intraday movements of the FTSE 100 index 
+                    with unprecedented accuracy using variational quantum classifiers.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Years of Data</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Time Intervals</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Features</div>
+                    </div>
+                </div>
+                <button class="cta-button" onclick="scrollToSection('dashboard')">
+                    Start Predicting
+                </button>
+            </div>
+            <div class="hero-visual">
+                <div class="quantum-animation">
+                    <div class="quantum-circle"></div>
+                    <div class="quantum-particles"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">About Our Quantum Approach</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Revolutionary Technology</h3>
+                    <p>
+                        Our system combines the power of quantum computing with machine learning to analyze 
+                        FTSE 100 market patterns. Using Variational Quantum Classifiers (VQC), we process 
+                        complex market data through quantum circuits to generate accurate intraday predictions.
+                    </p>
+                    
+                    <h3>Technical Indicators</h3>
+                    <p>
+                        We analyze 8 key technical indicators including RSI, MACD, moving averages, 
+                        volatility, and volume patterns to create comprehensive market insights.
+                    </p>
+                    
+                    <h3>Real-Time Predictions</h3>
+                    <p>
+                        Get predictions for 2-hour intervals throughout the trading day (8:00 AM to 4:00 PM), 
+                        helping you make informed trading decisions with quantum-powered accuracy.
+                    </p>
+                </div>
+                <div class="about-features">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚛</div>
+                        <h4>Quantum Processing</h4>
+                        <p>Advanced quantum algorithms for pattern recognition</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h4>Technical Analysis</h4>
+                        <p>Comprehensive market indicators and metrics</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⏰</div>
+                        <h4>Intraday Focus</h4>
+                        <p>2-hour interval predictions for precise timing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section">
+        <div class="container">
+            <h2 class="section-title">Prediction Dashboard</h2>
+            
+            <!-- Date Selection -->
+            <div class="date-selector">
+                <label for="dateInput">Select Date:</label>
+                <input type="date" id="dateInput" class="date-input">
+                <button id="predictBtn" class="predict-button">Get Predictions</button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state hidden">
+                <div class="quantum-loader">
+                    <div class="loader-circle"></div>
+                    <p>Training quantum model...</p>
+                </div>
+            </div>
+
+            <!-- Results Container -->
+            <div id="resultsContainer" class="results-container hidden">
+                <!-- Prediction Summary -->
+                <div class="prediction-summary">
+                    <h3>Prediction Summary</h3>
+                    <div class="summary-stats">
+                        <div class="summary-item">
+                            <span class="summary-label">Target Date:</span>
+                            <span id="targetDate" class="summary-value"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Training Period:</span>
+                            <span id="trainingPeriod" class="summary-value"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Model Accuracy:</span>
+                            <span id="modelAccuracy" class="summary-value"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Predictions Grid -->
+                <div class="predictions-grid">
+                    <h3>Intraday Predictions</h3>
+                    <div id="predictionsGrid" class="grid-container">
+                        <!-- Predictions will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-container">
+                    <div class="chart-section">
+                        <h3>Predicted vs Actual Movement</h3>
+                        <canvas id="predictionChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="chart-section">
+                        <h3>Confidence Levels</h3>
+                        <canvas id="confidenceChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Actual Data Table -->
+                <div id="actualDataSection" class="actual-data-section hidden">
+                    <h3>Actual Market Data</h3>
+                    <div class="data-table">
+                        <table id="actualDataTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Open</th>
+                                    <th>High</th>
+                                    <th>Low</th>
+                                    <th>Close</th>
+                                    <th>Volume</th>
+                                    <th>Returns</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Actual data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

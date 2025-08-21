@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
 
 from model.schemas import (
     TrainingRequest, TrainingResponse,
@@ -19,11 +19,11 @@ async def get_model_status():
 
 @router.post("/train", response_model=TrainingResponse)
 async def train_model(request: TrainingRequest, background_tasks: BackgroundTasks):
-    """Train the quantum classifier with FTSE 100 data"""
+    """Train the quantum classifier with 3 years of FTSE 100 data ending yesterday (dynamic sliding window)"""
     try:
         logger.info("Received training request")
         
-        # Train the model
+        # Train the model (dates are optional, will use 3 years ending yesterday)
         results = model_service.train_model(
             start_date=request.start_date,
             end_date=request.end_date,
@@ -48,13 +48,29 @@ async def predict(request: PredictionRequest):
         logger.error(f"Prediction request failed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/predict/latest", response_model=PredictionResponse)
+@router.post("/predict/latest")
 async def predict_latest():
-    """Predict next day movement using latest FTSE 100 data"""
+    """Predict today's intraday movements at 2-hour intervals (8:00, 10:00, 12:00, 14:00, 16:00). 
+    Automatically retrains model daily with 3 years of data ending yesterday."""
     try:
-        result = model_service.predict_latest()
-        return PredictionResponse(**result)
+        result = model_service.predict_intraday_latest()
+        return result
         
     except Exception as e:
         logger.error(f"Latest prediction failed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/date")
+async def predict_for_date(target_date: str = Query(..., description="Target date in YYYY-MM-DD format")):
+    """Predict intraday movements for a specific date using 3 years of data ending the day before.
+    Returns predictions and actual data for comparison if it's a historical date."""
+    try:
+        result = model_service.predict_for_date(target_date)
+        return result
+        
+    except ValueError as e:
+        logger.error(f"Invalid date format: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Date prediction failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

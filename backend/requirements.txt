@@ -9,3 +9,5 @@ qiskit_machine_learning
 qiskit_algorithms
 pydantic
 pydantic-settings
+joblib
+cloudpickle

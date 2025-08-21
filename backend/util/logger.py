@@ -8,6 +8,8 @@ def setup_logger(name: str, level: str = "INFO") -> logging.Logger:
     
     logger = logging.getLogger(name)
     logger.setLevel(getattr(logging, level.upper()))
+    if logger.handlers:
+        return logger
     
     # Create formatter
     formatter = logging.Formatter(

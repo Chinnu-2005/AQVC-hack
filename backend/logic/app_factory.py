@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 
@@ -11,6 +12,7 @@ from middleware.error_handler import (
 from util.exceptions import QuantumMLException
 from util.config import settings
 from util.logger import setup_logger
+from logic.startup import startup as run_startup_tasks
 
 def create_app() -> FastAPI:
     """
@@ -43,12 +45,18 @@ def create_app() -> FastAPI:
     # Add exception handlers
     app.add_exception_handler(QuantumMLException, quantum_ml_exception_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
+    app.add_exception_handler(HTTPException, http_exception_handler)
     
     # Include routers
     app.include_router(health.router)
     app.include_router(model.router)
     app.include_router(data.router)
     
+    # Startup tasks
+    @app.on_event("startup")
+    async def _startup_event():
+        run_startup_tasks()
+
     # Root endpoint
     @app.get("/")
     async def root():

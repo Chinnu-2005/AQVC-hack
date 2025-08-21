@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     RANDOM_SEED: int = 42
     FEATURE_DIM: int = 8
     QUANTUM_REPS: int = 2
+    MODEL_DIR: str = "models"
+    MODEL_FILE: str = "quantum_vqc.joblib"
+    MODEL_METADATA_FILE: str = "model_metadata.json"
     
     # Data Configuration
     DEFAULT_START_DATE: str = "2020-01-01"
