@@ -1,7 +1,7 @@
 {
   "is_trained": true,
-  "accuracy": 0.4782608695652174,
-  "last_trained": "2025-08-20T20:16:50.302165",
+  "accuracy": 0.48,
+  "last_trained": "2025-08-21T20:45:58.697032",
   "feature_dim": 8,
-  "training_samples": 115
+  "training_samples": 746
 }
