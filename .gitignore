@@ -1,0 +1,60 @@
+# ---- Global ----
+.DS_Store
+.env
+*.log
+*.sqlite3
+*.db
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.egg-info/
+*.pot
+*.mo
+*.pem
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+*.pyc
+*.pyo
+
+# ---- Python (FastAPI backend) ----
+/backend/__pycache__/
+/backend/*.py[cod]
+/backend/.pytest_cache/
+/backend/.mypy_cache/
+/backend/.ruff_cache/
+/backend/.coverage
+/backend/.tox/
+/backend/.nox/
+/backend/.pytest_cache/
+/backend/.pylint.d/
+/backend/instance/
+/backend/db.sqlite3
+
+# ---- React (frontend) ----
+/frontend/node_modules/
+/frontend/build/
+/frontend/.next/
+/frontend/.parcel-cache/
+/frontend/.cache/
+/frontend/dist/
+/frontend/coverage/
+/frontend/.eslintcache
+/frontend/yarn-error.log
+/frontend/package-lock.json
+/frontend/yarn.lock
+
+# ---- IDE / Editor ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# ---- OS files ----
+Thumbs.db
