@@ -124,6 +124,11 @@ class ModelService:
                 logger.info("Model loaded from disk and ready for predictions")
         except Exception as e:
             logger.error(f"Failed to load model from disk: {str(e)}")
+            # Mark as not trained so auto-train can recover
+            self.predictor = None
+            self.model_metadata.update({
+                "is_trained": False
+            })
 
     def should_retrain(self) -> bool:
         """
@@ -348,7 +353,26 @@ class ModelService:
             return result
             
         except Exception as e:
-            logger.error(f"Intraday prediction failed: {str(e)}")
+            # Attempt recovery if this is likely a bytecode/version mismatch (e.g., "unknown opcode")
+            err_msg = str(e)
+            if "unknown opcode" in err_msg.lower():
+                logger.warning("Detected potential bytecode/version mismatch during prediction. Retrying after auto-retrain...")
+                try:
+                    self.train_model()  # retrain with default 3-year window
+                    # Retry prediction once after retraining
+                    start_date, end_date = DataService.get_training_date_range()
+                    historical_data = DataService.fetch_ftse_data(start_date, end_date)
+                    result = self.predictor.predict_intraday(historical_data)
+                    result.update({
+                        "training_accuracy": self.model_metadata.get("accuracy"),
+                        "training_samples": self.model_metadata.get("training_samples"),
+                        "training_period": f"{start_date} to {end_date}",
+                    })
+                    return result
+                except Exception as retry_err:
+                    logger.error(f"Intraday prediction still failing after retrain: {retry_err}")
+                    raise
+            logger.error(f"Intraday prediction failed: {err_msg}")
             raise
 
     def predict_for_date(self, target_date: str) -> Dict[str, Any]:
